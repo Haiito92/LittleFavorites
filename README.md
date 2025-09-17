@@ -1,0 +1,1 @@
+Little Favorites is a package that lets you have a window in which you can keep your favorite assets.
