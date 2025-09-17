@@ -2,7 +2,7 @@
   "name": "com.haiitocorp.littlefavorites",
   "version": "1.0.0",
   "displayName": "Little Favorites",
-  "description": "Favorites Asset Editor Window",
+  "description": "Favorite Assets Editor Window",
   "unity": "6000.0",
   "dependencies": {
   },
