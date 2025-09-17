@@ -14,8 +14,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
         private string _searchQuery = "";
         
         // Tree View
-        private LittleFavoritesTreeView _favoritesTreeView;
         private TreeViewState _favoritesTreeViewState;
+        private LittleFavoritesTreeView _favoritesTreeView;
         #endregion
         
         [MenuItem("Tools/HaiitoCorp/LittleFavorites")]
@@ -28,7 +28,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             _searchField = new SearchField();
 
-            if (_favoritesTreeViewState == null) _favoritesTreeViewState = new TreeViewState();
+            _favoritesTreeViewState ??= new TreeViewState();
 
             _favoritesTreeView = new LittleFavoritesTreeView(_favoritesTreeViewState);
         }
@@ -55,6 +55,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 case EventType.DragExited:
                     foreach (Object draggedObject in DragAndDrop.objectReferences)
                     {
+                        _favoritesTreeView.AddFavorite(draggedObject);
                     }
                     evt.Use();
                     break;
