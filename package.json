@@ -1,0 +1,14 @@
+{
+  "name": "com.haiitocorp.littlefavorites",
+  "version": "1.0.0",
+  "displayName": "Little Favorites",
+  "description": "Favorites Asset Editor Window",
+  "unity": "6000.0",
+  "dependencies": {
+  },
+  "author": {
+    "name": "Antoine Hanna (Haiito92)",
+    "email": "ahanna.pro@gmail.com",
+    "url": "https://github.com/Haiito92"
+  }
+}

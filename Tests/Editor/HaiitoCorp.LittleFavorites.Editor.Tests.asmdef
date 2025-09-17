@@ -1,0 +1,19 @@
+{
+    "name": "HaiitoCorp.LittleFavorites.Editor.Tests",
+    "rootNamespace": "HaiitoCorp.LittleFavorites.Editor.Tests",
+    "references": [
+        "GUID:a55ea41b2b4828049ad3a47bd05058f4",
+        "GUID:18b86ec5d50f6da46b2890e055a7c10c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
