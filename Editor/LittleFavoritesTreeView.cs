@@ -75,18 +75,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Reload();
         }
 
-        private void RemoveFavorite(Object favorite)
-        {
-            if(!_favorites.Contains(favorite))
-            {
-                throw new ArgumentException("Tried to remove a favorite that doesn't exist.");
-            }
-            
-            _favorites.Remove(favorite);
-            
-            Reload();
-        }
-
         private void RemoveFavorite(int treeItemId)
         {
             if(!_favoritesDictionary.ContainsKey(treeItemId))
@@ -94,7 +82,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 throw new ArgumentOutOfRangeException(nameof(treeItemId));
             }
             
-            RemoveFavorite(_favoritesDictionary[treeItemId]);
+            _favorites.Remove(_favoritesDictionary[treeItemId]);
         }
 
         public void RemoveSelection()
@@ -105,6 +93,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
             {
                 RemoveFavorite(selectedID);
             }
+            
+            Reload();
         }
         #endregion
 
