@@ -78,23 +78,18 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Reload();
         }
 
-        private void RemoveFavorite(int treeItemId)
-        {
-            if(!_favoritesDictionary.ContainsKey(treeItemId))
-            {
-                throw new ArgumentOutOfRangeException(nameof(treeItemId));
-            }
-            
-            _favorites.Remove(_favoritesDictionary[treeItemId]);
-        }
-
         public void RemoveSelection()
         {
             IList<int> selectedIDs = GetSelection();
 
             foreach (int selectedID in selectedIDs)
             {
-                RemoveFavorite(selectedID);
+                if(!_favoritesDictionary.ContainsKey(selectedID))
+                {
+                    throw new IndexOutOfRangeException($"FavoritesDictionary key list doesn't contain this Id");
+                }
+            
+                _favorites.Remove(_favoritesDictionary[selectedID]);
             }
             
             Reload();
