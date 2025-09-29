@@ -42,15 +42,12 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _favoritesTreeView.OnGUI(dropArea);
 
             Event evt = Event.current;
-
+            if(!dropArea.Contains(evt.mousePosition)) return;
+            
             switch (evt.type)
             {
                 case EventType.DragUpdated:
                 case EventType.DragPerform:
-                    if(!dropArea.Contains(evt.mousePosition)) break;
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                    DragAndDrop.AcceptDrag();
-                    evt.Use();
                     break;
                 case EventType.DragExited:
                     foreach (Object draggedObject in DragAndDrop.objectReferences)
