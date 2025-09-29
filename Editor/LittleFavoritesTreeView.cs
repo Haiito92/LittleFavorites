@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace HaiitoCorp.LittleFavorites.Editor
 {
@@ -13,6 +15,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
         //int correspond to the id of the tree item "holding" the favorite.
         private Dictionary<int, Object> _favoritesDictionary = new Dictionary<int, Object>();
+
+        private string _searchQuery;
         
         public LittleFavoritesTreeView(TreeViewState state) : base(state)
         {
@@ -39,6 +43,11 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
             foreach (Object favorite in _favorites)
             {
+                if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.StartsWith(_searchQuery))
+                {
+                    continue;
+                }
+                
                 TreeViewItem item = new TreeViewItem
                 {
                     id = _nextUId++,
@@ -66,15 +75,37 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Reload();
         }
 
-        public void RemoveFavorite(Object favorite)
+        private void RemoveFavorite(Object favorite)
         {
-            if(!_favorites.Contains(favorite)) return;
+            if(!_favorites.Contains(favorite))
+            {
+                throw new ArgumentException("Tried to remove a favorite that doesn't exist.");
+            }
             
             _favorites.Remove(favorite);
             
             Reload();
         }
-        
+
+        private void RemoveFavorite(int treeItemId)
+        {
+            if(!_favoritesDictionary.ContainsKey(treeItemId))
+            {
+                throw new ArgumentOutOfRangeException(nameof(treeItemId));
+            }
+            
+            RemoveFavorite(_favoritesDictionary[treeItemId]);
+        }
+
+        public void RemoveSelection()
+        {
+            IList<int> selectedIDs = GetSelection();
+
+            foreach (int selectedID in selectedIDs)
+            {
+                RemoveFavorite(selectedID);
+            }
+        }
         #endregion
 
         #region User Input Handling
@@ -94,7 +125,16 @@ namespace HaiitoCorp.LittleFavorites.Editor
         }
 
         #endregion
-        
-        
+
+        #region Filter
+
+        public void SetSearchQuery(string searchQuery)
+        {
+            _searchQuery = searchQuery;
+            
+            Reload();
+        }
+
+        #endregion
     }
 }

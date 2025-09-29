@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -36,20 +35,30 @@ namespace HaiitoCorp.LittleFavorites.Editor
         private void OnGUI()
         {
             _searchQuery = _searchField.OnGUI(_searchQuery);
+            _favoritesTreeView.SetSearchQuery(_searchQuery);
             
             Rect dropArea = GUILayoutUtility.GetRect(0.0f, 0.0f, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             
             _favoritesTreeView.OnGUI(dropArea);
 
             Event evt = Event.current;
-            if(!dropArea.Contains(evt.mousePosition)) return;
             
             switch (evt.type)
             {
+                case EventType.KeyDown:
+                    switch (evt.keyCode)
+                    {
+                        case KeyCode.Delete:
+                            _favoritesTreeView.RemoveSelection();
+                            evt.Use();
+                            break;
+                    }
+                    break;
                 case EventType.DragUpdated:
                 case EventType.DragPerform:
-                    break;
                 case EventType.DragExited:
+                    if(!dropArea.Contains(evt.mousePosition)) break;
+
                     foreach (Object draggedObject in DragAndDrop.objectReferences)
                     {
                         _favoritesTreeView.AddFavorite(draggedObject);
