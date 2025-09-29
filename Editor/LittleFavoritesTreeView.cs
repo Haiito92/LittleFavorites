@@ -43,7 +43,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
             foreach (Object favorite in _favorites)
             {
-                if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.Contains(_searchQuery))
+                if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.ToLower().Contains(_searchQuery.ToLower()))
                 {
                     continue;
                 }
@@ -115,7 +115,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
         #endregion
 
-        #region Filter
+        #region Search Query
 
         public void SetSearchQuery(string searchQuery)
         {
