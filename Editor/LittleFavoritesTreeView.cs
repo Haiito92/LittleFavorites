@@ -11,7 +11,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
     {
         private int _nextUId = 0;
 
-        private List<Object> _favorites = new List<Object>();
+        private static List<Object> _favorites = new List<Object>();
 
         //int correspond to the id of the tree item "holding" the favorite.
         private Dictionary<int, Object> _favoritesDictionary = new Dictionary<int, Object>();
@@ -32,13 +32,24 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             _nextUId = 0;
             
-            TreeViewItem root = new TreeViewItem { id = _nextUId++, depth = -1, displayName = "Root" };
+            TreeViewItem root = new TreeViewItem
+            {
+                id = _nextUId++, 
+                depth = -1, 
+                displayName = "Root", 
+            };
 
             _favoritesDictionary.Clear();
             
             List<TreeViewItem> favoriteTreeViewItems = new List<TreeViewItem>
             {
-                new TreeViewItem { id = _nextUId++, depth = 0, displayName = "Favorites"},
+                new TreeViewItem
+                {
+                    id = _nextUId++, 
+                    depth = 0, 
+                    displayName = "Favorites", 
+                    icon = EditorGUIUtility.IconContent("Folder Icon").image as Texture2D
+                },
             };
 
             foreach (Object favorite in _favorites)
@@ -53,6 +64,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                     id = _nextUId++,
                     depth = 1, 
                     displayName = favorite.name,
+                    icon = EditorGUIUtility.IconContent("Prefab Icon").image as Texture2D
                 };
                 favoriteTreeViewItems.Add(item);
                 
@@ -87,7 +99,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
             {
                 if(!_favoritesDictionary.ContainsKey(selectedID))
                 {
-                    throw new IndexOutOfRangeException($"FavoritesDictionary key list doesn't contain this Id");
+                    throw new KeyNotFoundException($"FavoritesDictionary key list doesn't contain this Id");
                 }
             
                 _favorites.Remove(_favoritesDictionary[selectedID]);
