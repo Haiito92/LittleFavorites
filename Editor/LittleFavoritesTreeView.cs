@@ -66,11 +66,14 @@ namespace HaiitoCorp.LittleFavorites.Editor
         
         #region Favorites List
 
-        public void AddFavorite(Object favorite)
+        public void AddDraggedObjects(Object[] draggedObjects)
         {
-            if(_favorites.Contains(favorite)) return;
+            foreach (Object draggedObject in draggedObjects)
+            {
+                if(_favorites.Contains(draggedObject)) return;
             
-            _favorites.Add(favorite);
+                _favorites.Add(draggedObject);
+            }
             
             Reload();
         }

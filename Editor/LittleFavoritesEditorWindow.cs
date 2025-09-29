@@ -59,10 +59,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 case EventType.DragExited:
                     if(!dropArea.Contains(evt.mousePosition)) break;
 
-                    foreach (Object draggedObject in DragAndDrop.objectReferences)
-                    {
-                        _favoritesTreeView.AddFavorite(draggedObject);
-                    }
+                    _favoritesTreeView.AddDraggedObjects(DragAndDrop.objectReferences);
+                    
                     evt.Use();
                     break;
             }
