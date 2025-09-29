@@ -43,7 +43,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
             foreach (Object favorite in _favorites)
             {
-                if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.StartsWith(_searchQuery))
+                if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.Contains(_searchQuery))
                 {
                     continue;
                 }
