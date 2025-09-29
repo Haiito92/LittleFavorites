@@ -75,6 +75,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 _favorites.Add(draggedObject);
             }
             
+            _favorites.Sort((a,b) => String.Compare(a.name, b.name, StringComparison.CurrentCulture));
             Reload();
         }
 
@@ -118,6 +119,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
         public void SetSearchQuery(string searchQuery)
         {
+            if(_searchQuery == searchQuery) return;
+            
             _searchQuery = searchQuery;
             
             Reload();
