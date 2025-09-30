@@ -71,7 +71,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                     id = _nextUId++,
                     depth = 1, 
                     displayName = favorite.name,
-                    icon = EditorGUIUtility.IconContent("Prefab Icon").image as Texture2D
+                    icon = EditorGUIUtility.ObjectContent(favorite, favorite.GetType()).image as Texture2D
                 };
                 favoriteTreeViewItems.Add(item);
                 
@@ -144,6 +144,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
         #region Drag And Drop Handling
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
+            //Here add more logic to drop in the future (handling of type of objects, folders, etc...)
+            
             if (args.performDrop)
             {
                 LittleFavoritesEditorData.AddFavorites(DragAndDrop.objectReferences);
