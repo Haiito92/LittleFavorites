@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -56,6 +57,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                     {
                         case KeyCode.Delete:
                             LittleFavoritesEditorData.RemoveFavorites(_favoritesTreeView.GetSelectedObjects());
+                            _favoritesTreeView.SetSelection(new List<int>(), TreeViewSelectionOptions.None);
                             evt.Use();
                             break;
                     }
