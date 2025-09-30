@@ -102,6 +102,12 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
             return selectedFavoriteObjects;
         }
+
+        public void RemoveSelection()
+        {
+            LittleFavoritesEditorData.RemoveFavorites(GetSelectedObjects());
+            SetSelection(new List<int>(), TreeViewSelectionOptions.None);
+        }
         
         private void OnFavoritesChanged()
         {

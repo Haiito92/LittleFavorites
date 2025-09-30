@@ -56,8 +56,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                     switch (evt.keyCode)
                     {
                         case KeyCode.Delete:
-                            LittleFavoritesEditorData.RemoveFavorites(_favoritesTreeView.GetSelectedObjects());
-                            _favoritesTreeView.SetSelection(new List<int>(), TreeViewSelectionOptions.None);
+                            _favoritesTreeView.RemoveSelection();
                             evt.Use();
                             break;
                     }
