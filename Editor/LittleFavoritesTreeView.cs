@@ -47,17 +47,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
             };
 
             _favoritesDictionary.Clear();
-            
-            List<TreeViewItem> favoriteTreeViewItems = new List<TreeViewItem>
-            {
-                new TreeViewItem
-                {
-                    id = _nextUId++, 
-                    depth = 0, 
-                    displayName = "Favorites", 
-                    icon = EditorGUIUtility.IconContent("Folder Icon").image as Texture2D
-                },
-            };
+
+            List<TreeViewItem> favoriteTreeViewItems = new List<TreeViewItem>();
 
             foreach (Object favorite in LittleFavoritesEditorData.Favorites)
             {
@@ -69,7 +60,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 TreeViewItem item = new TreeViewItem
                 {
                     id = _nextUId++,
-                    depth = 1, 
+                    depth = 0, 
                     displayName = favorite.name,
                     icon = EditorGUIUtility.ObjectContent(favorite, favorite.GetType()).image as Texture2D
                 };
@@ -132,7 +123,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             base.SingleClickedItem(id);
 
-            if(id <= 1) return; // Not take into account the root and the favorites "folder".
+            if(id <= 0) return; // Not take into account the root.
             
             Selection.activeObject = _favoritesDictionary[id];
         }
@@ -141,7 +132,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             base.DoubleClickedItem(id);
 
-            if(id <= 1) return; // Not take into account the root and the favorites "folder".
+            if(id <= 0) return; // Not take into account the root.
             
             AssetDatabase.OpenAsset(_favoritesDictionary[id]);
         }
