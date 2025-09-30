@@ -1,9 +1,7 @@
 {
     "name": "HaiitoCorp.LittleFavorites.Editor",
     "rootNamespace": "HaiitoCorp.LittleFavorites.Editor",
-    "references": [
-        "GUID:a55ea41b2b4828049ad3a47bd05058f4"
-    ],
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],
