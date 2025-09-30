@@ -12,12 +12,12 @@ namespace HaiitoCorp.LittleFavorites.Editor
     internal static class LittleFavoritesEditorData
     {
         private const string c_editorPrefsKey = "LittleFavoritesEditorKey";
-        public static List<Object> Favorites { get; private set; } = new List<Object>();
+        internal static List<Object> Favorites { get; private set; } = new List<Object>();
 
-        public static event UnityAction FavoritesChanged;
+        internal static event UnityAction FavoritesChanged;
 
         #region Favorites
-        public static void AddFavorites(Object[] favoriteObjects)
+        internal static void AddFavorites(Object[] favoriteObjects)
         {
             foreach (Object favoriteObject in favoriteObjects)
             {
@@ -33,7 +33,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
             FavoritesChanged?.Invoke();
         }
 
-        public static void RemoveFavorites(Object[] favoriteObjects)
+        internal static void RemoveFavorites(Object[] favoriteObjects)
         {
             foreach (Object favoriteObject in favoriteObjects)
             {
