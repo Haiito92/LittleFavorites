@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -139,6 +140,27 @@ namespace HaiitoCorp.LittleFavorites.Editor
         #endregion
 
         #region Drag And Drop Handling
+
+        protected override bool CanStartDrag(CanStartDragArgs args)
+        {
+            return args.draggedItemIDs.Count > 0;
+        }
+
+        protected override void SetupDragAndDrop(SetupDragAndDropArgs args)
+        {
+            DragAndDrop.PrepareStartDrag();
+
+            Object[] draggedObjects = new Object[args.draggedItemIDs.Count];
+            for (int i = 0; i < draggedObjects.Length; i++)
+            {
+                draggedObjects[i] = _favoritesDictionary[args.draggedItemIDs[i]];
+            }
+
+            DragAndDrop.objectReferences = draggedObjects;
+            
+            DragAndDrop.StartDrag("Start Favorites Drag.");
+        }
+
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
             //Here add more logic to drop in the future (handling of type of objects, folders, etc...)

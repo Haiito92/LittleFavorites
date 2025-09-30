@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -9,7 +7,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
     public class LittleFavoritesEditorWindow : EditorWindow
     {
         #region Fields
-
         private const string c_iconPath = "Packages/com.haiitocorp.littlefavorites/Resources/StarIcon.png";
         
         // Search
