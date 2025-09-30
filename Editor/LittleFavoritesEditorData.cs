@@ -26,8 +26,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 Favorites.Add(favoriteObject);
             }
             
-            Favorites.Sort((a,b) => String.Compare(a.name, b.name, StringComparison.CurrentCulture));
-            
             SaveFavoritesToEditorPrefs();
             
             FavoritesChanged?.Invoke();
