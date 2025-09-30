@@ -164,15 +164,22 @@ namespace HaiitoCorp.LittleFavorites.Editor
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
             //Here add more logic to drop in the future (handling of type of objects, folders, etc...)
-
-            
-            
             if (args.performDrop)
             {
+                
+
                 object origin = DragAndDrop.GetGenericData("LittleFavoritesTreeView");
                 if (origin == this)
                 {
                     Debug.Log("Drag from the LittleFavoritesTreeView");
+                    //Detect object that were moved
+                    //Check whats their new id
+                    //Call LittleFavoritesEditorData function to move around asset.
+                    switch (args.dragAndDropPosition)
+                    {
+                        case DragAndDropPosition.BetweenItems:
+                            break;
+                    }
                 }
                 else
                 {
