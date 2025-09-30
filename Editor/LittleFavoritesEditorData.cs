@@ -73,25 +73,26 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             Favorites.Clear();
 
-            if(!EditorPrefs.HasKey(c_editorPrefsKey)) return;
-            
-            string favoritesGuidsString = EditorPrefs.GetString(c_editorPrefsKey);
-
-            if(string.IsNullOrEmpty(favoritesGuidsString) || string.IsNullOrWhiteSpace(favoritesGuidsString)) return;
-
-            List<string> guids = JsonConvert.DeserializeObject<List<string>>(favoritesGuidsString);
-
-            foreach (string guid in guids)
+            if (EditorPrefs.HasKey(c_editorPrefsKey))
             {
-                string favoritePath = AssetDatabase.GUIDToAssetPath(guid);
-                Object favorite = AssetDatabase.LoadAssetAtPath<Object>(favoritePath);
-                if(favorite == null)
+                string favoritesGuidsString = EditorPrefs.GetString(c_editorPrefsKey);
+
+                if(string.IsNullOrEmpty(favoritesGuidsString) || string.IsNullOrWhiteSpace(favoritesGuidsString)) return;
+
+                List<string> guids = JsonConvert.DeserializeObject<List<string>>(favoritesGuidsString);
+
+                foreach (string guid in guids)
                 {
-                    Debug.LogWarning("[LittleFavorites] Couldn't load object. Couldn't find object at that path.");
-                    continue;
-                }
+                    string favoritePath = AssetDatabase.GUIDToAssetPath(guid);
+                    Object favorite = AssetDatabase.LoadAssetAtPath<Object>(favoritePath);
+                    if(favorite == null)
+                    {
+                        Debug.LogWarning("[LittleFavorites] Couldn't load object. Couldn't find object at that path.");
+                        continue;
+                    }
                 
-                Favorites.Add(favorite);
+                    Favorites.Add(favorite);
+                }
             }
             
             FavoritesChanged?.Invoke();
