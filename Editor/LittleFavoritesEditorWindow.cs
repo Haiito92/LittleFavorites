@@ -9,6 +9,9 @@ namespace HaiitoCorp.LittleFavorites.Editor
     public class LittleFavoritesEditorWindow : EditorWindow
     {
         #region Fields
+
+        private const string c_iconPath = "Packages/com.haiitocorp.littlefavorites/Resources/StarIcon.png";
+        
         // Search
         private SearchField _searchField;
         private string _searchQuery = "";
@@ -26,7 +29,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
 
         private void OnEnable()
         {
-            Texture2D windowIconTexture = Resources.Load("StarIcon") as Texture2D;
+            Texture2D windowIconTexture = (Texture2D)EditorGUIUtility.Load(c_iconPath) ;
             titleContent = new GUIContent("Little Favorites", windowIconTexture);
             
             _searchField = new SearchField();
