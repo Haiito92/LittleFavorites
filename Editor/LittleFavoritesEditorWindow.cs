@@ -21,11 +21,14 @@ namespace HaiitoCorp.LittleFavorites.Editor
         [MenuItem("Tools/HaiitoCorp/LittleFavorites")]
         public static void OpenWindow()
         {
-            GetWindow<LittleFavoritesEditorWindow>("Little Favorites");
+            LittleFavoritesEditorWindow window = GetWindow<LittleFavoritesEditorWindow>("Little Favorites");
         }
 
         private void OnEnable()
         {
+            Texture2D windowIconTexture = Resources.Load("StarIcon") as Texture2D;
+            titleContent = new GUIContent("Little Favorites", windowIconTexture);
+            
             _searchField = new SearchField();
 
             _favoritesTreeViewState ??= new TreeViewState();
