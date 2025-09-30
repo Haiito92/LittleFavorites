@@ -1,7 +1,7 @@
+using System;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace HaiitoCorp.LittleFavorites.Editor
 {
@@ -32,6 +32,11 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _favoritesTreeView.InitializeFavoritesTree();
         }
 
+        private void OnDestroy()
+        {
+            _favoritesTreeView.FinalizeFavoritesTree();
+        }
+
         private void OnGUI()
         {
             _searchQuery = _searchField.OnGUI(_searchQuery);
@@ -40,8 +45,9 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Rect dropArea = GUILayoutUtility.GetRect(0.0f, 0.0f, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             
             _favoritesTreeView.OnGUI(dropArea);
-
+            
             Event evt = Event.current;
+            if(evt == null) return;
             
             switch (evt.type)
             {
@@ -53,15 +59,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
                             evt.Use();
                             break;
                     }
-                    break;
-                case EventType.DragUpdated:
-                case EventType.DragPerform:
-                case EventType.DragExited:
-                    if(!dropArea.Contains(evt.mousePosition)) break;
-                    
-                    LittleFavoritesEditorData.AddFavorites(DragAndDrop.objectReferences);
-                    evt.Use();
-                    
                     break;
             }
         }

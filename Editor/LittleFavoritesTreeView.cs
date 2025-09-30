@@ -29,6 +29,11 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             LittleFavoritesEditorData.FavoritesChanged += OnFavoritesChanged;
         }
+        
+        public void FinalizeFavoritesTree()
+        {
+            LittleFavoritesEditorData.FavoritesChanged -= OnFavoritesChanged;
+        }
 
         protected override TreeViewItem BuildRoot()
         {
@@ -104,6 +109,17 @@ namespace HaiitoCorp.LittleFavorites.Editor
         }
         #endregion
 
+        #region Search Query
+        public void SetSearchQuery(string searchQuery)
+        {
+            if(_searchQuery == searchQuery) return;
+            
+            _searchQuery = searchQuery;
+            
+            Reload();
+        }
+        #endregion
+
         #region User Input Handling
 
         protected override void SingleClickedItem(int id)
@@ -123,20 +139,18 @@ namespace HaiitoCorp.LittleFavorites.Editor
             
             AssetDatabase.OpenAsset(_favoritesDictionary[id]);
         }
-
         #endregion
 
-        #region Search Query
-
-        public void SetSearchQuery(string searchQuery)
+        #region Drag And Drop Handling
+        protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
-            if(_searchQuery == searchQuery) return;
+            if (args.performDrop)
+            {
+                LittleFavoritesEditorData.AddFavorites(DragAndDrop.objectReferences);
+            }
             
-            _searchQuery = searchQuery;
-            
-            Reload();
+            return DragAndDropVisualMode.Move;
         }
-
         #endregion
     }
 }
