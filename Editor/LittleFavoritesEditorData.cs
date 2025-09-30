@@ -71,6 +71,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
         [DidReloadScripts]
         private static void LoadFavoritesFromEditorPrefs()
         {
+            Favorites.Clear();
+
             if(!EditorPrefs.HasKey(c_editorPrefsKey)) return;
             
             string favoritesGuidsString = EditorPrefs.GetString(c_editorPrefsKey);
@@ -78,8 +80,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
             if(string.IsNullOrEmpty(favoritesGuidsString) || string.IsNullOrWhiteSpace(favoritesGuidsString)) return;
 
             List<string> guids = JsonConvert.DeserializeObject<List<string>>(favoritesGuidsString);
-            
-            Favorites.Clear();
 
             foreach (string guid in guids)
             {
