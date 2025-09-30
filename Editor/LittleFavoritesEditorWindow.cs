@@ -28,9 +28,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _searchField = new SearchField();
 
             _favoritesTreeViewState ??= new TreeViewState();
-
             _favoritesTreeView = new LittleFavoritesTreeView(_favoritesTreeViewState);
-            _favoritesTreeView.InitializeTree();
+            _favoritesTreeView.InitializeFavoritesTree();
         }
 
         private void OnGUI()
@@ -50,7 +49,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                     switch (evt.keyCode)
                     {
                         case KeyCode.Delete:
-                            _favoritesTreeView.RemoveSelection();
+                            LittleFavoritesEditorData.RemoveFavorites(_favoritesTreeView.GetSelectedObjects());
                             evt.Use();
                             break;
                     }
@@ -59,10 +58,10 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 case EventType.DragPerform:
                 case EventType.DragExited:
                     if(!dropArea.Contains(evt.mousePosition)) break;
-
-                    _favoritesTreeView.AddDraggedObjects(DragAndDrop.objectReferences);
                     
+                    LittleFavoritesEditorData.AddFavorites(DragAndDrop.objectReferences);
                     evt.Use();
+                    
                     break;
             }
         }

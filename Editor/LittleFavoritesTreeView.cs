@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,12 +8,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
 {
     public class LittleFavoritesTreeView : TreeView
     {
-        private const string c_editorPrefsKey = "LittleFavoritesEditorKey";
-        
         private int _nextUId = 0;
-
-        private static List<Object> _favorites = new List<Object>();
-
         //int correspond to the id of the tree item "holding" the favorite.
         private Dictionary<int, Object> _favoritesDictionary = new Dictionary<int, Object>();
 
@@ -33,16 +25,11 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Reload();
         }
 
-        public void InitializeTree()
+        public void InitializeFavoritesTree()
         {
-            _favorites = new List<Object>();
-            _favoritesDictionary = new Dictionary<int, Object>();
-            
-            LoadFavoritesFromEditorPrefs();
-            
-            Reload();
+            LittleFavoritesEditorData.FavoritesChanged += OnFavoritesChanged;
         }
-        
+
         protected override TreeViewItem BuildRoot()
         {
             _nextUId = 0;
@@ -67,7 +54,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 },
             };
 
-            foreach (Object favorite in _favorites)
+            foreach (Object favorite in LittleFavoritesEditorData.Favorites)
             {
                 if (!string.IsNullOrEmpty(_searchQuery) && !favorite.name.ToLower().Contains(_searchQuery.ToLower()))
                 {
@@ -93,39 +80,26 @@ namespace HaiitoCorp.LittleFavorites.Editor
         
         #region Favorites List
 
-        public void AddDraggedObjects(Object[] draggedObjects)
-        {
-            foreach (Object draggedObject in draggedObjects)
-            {
-                if(_favorites.Contains(draggedObject)) return;
-            
-                _favorites.Add(draggedObject);
-            }
-            
-            
-            _favorites.Sort((a,b) => String.Compare(a.name, b.name, StringComparison.CurrentCulture));
-            
-            SaveFavoritesToEditorPrefs();
-            
-            Reload();
-        }
-
-        public void RemoveSelection()
+        public Object[] GetSelectedObjects()
         {
             IList<int> selectedIDs = GetSelection();
+            Object[] selectedFavoriteObjects = new Object[selectedIDs.Count];
 
-            foreach (int selectedID in selectedIDs)
+            for (int i = 0; i < selectedIDs.Count; i++)
             {
-                if(!_favoritesDictionary.ContainsKey(selectedID))
+                if(!_favoritesDictionary.ContainsKey(selectedIDs[i]))
                 {
                     throw new KeyNotFoundException($"FavoritesDictionary key list doesn't contain this Id");
                 }
-            
-                _favorites.Remove(_favoritesDictionary[selectedID]);
+
+                selectedFavoriteObjects[i] = _favoritesDictionary[selectedIDs[i]];
             }
-            
-            SaveFavoritesToEditorPrefs();
-            
+
+            return selectedFavoriteObjects;
+        }
+        
+        private void OnFavoritesChanged()
+        {
             Reload();
         }
         #endregion
@@ -161,50 +135,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _searchQuery = searchQuery;
             
             Reload();
-        }
-
-        #endregion
-
-        #region Save and Load
-
-        private void SaveFavoritesToEditorPrefs()
-        {
-            List<string> guids = new List<string>();
-
-            foreach (Object favorite in _favorites)
-            {
-                string favoritePath = AssetDatabase.GetAssetPath(favorite);
-                guids.Add(AssetDatabase.AssetPathToGUID(favoritePath));
-            }
-            string favoritesGuidsString = JsonConvert.SerializeObject(guids);
-            
-            EditorPrefs.SetString(c_editorPrefsKey, favoritesGuidsString);
-        }
-
-        private void LoadFavoritesFromEditorPrefs()
-        {
-            if(!EditorPrefs.HasKey(c_editorPrefsKey)) return;
-            
-            string favoritesGuidsString = EditorPrefs.GetString(c_editorPrefsKey);
-
-            if(string.IsNullOrEmpty(favoritesGuidsString) || string.IsNullOrWhiteSpace(favoritesGuidsString)) return;
-
-            List<string> guids = JsonConvert.DeserializeObject<List<string>>(favoritesGuidsString);
-            
-            _favorites.Clear();
-
-            foreach (string guid in guids)
-            {
-                string favoritePath = AssetDatabase.GUIDToAssetPath(guid);
-                Object favorite = AssetDatabase.LoadAssetAtPath<Object>(favoritePath);
-                if(favorite == null)
-                {
-                    Debug.LogWarning("[LittleFavorites] Couldn't load object. Couldn't find object at that path.");
-                    continue;
-                }
-                
-                _favorites.Add(favorite);
-            }
         }
 
         #endregion
