@@ -30,6 +30,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _favoritesTreeViewState ??= new TreeViewState();
 
             _favoritesTreeView = new LittleFavoritesTreeView(_favoritesTreeViewState);
+            _favoritesTreeView.InitializeTree();
         }
 
         private void OnGUI()

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -9,6 +11,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
 {
     public class LittleFavoritesTreeView : TreeView
     {
+        private const string c_editorPrefsKey = "LittleFavoritesEditorKey";
+        
         private int _nextUId = 0;
 
         private static List<Object> _favorites = new List<Object>();
@@ -17,6 +21,7 @@ namespace HaiitoCorp.LittleFavorites.Editor
         private Dictionary<int, Object> _favoritesDictionary = new Dictionary<int, Object>();
 
         private string _searchQuery;
+        
         
         public LittleFavoritesTreeView(TreeViewState state) : base(state)
         {
@@ -28,6 +33,16 @@ namespace HaiitoCorp.LittleFavorites.Editor
             Reload();
         }
 
+        public void InitializeTree()
+        {
+            _favorites = new List<Object>();
+            _favoritesDictionary = new Dictionary<int, Object>();
+            
+            LoadFavoritesFromEditorPrefs();
+            
+            Reload();
+        }
+        
         protected override TreeViewItem BuildRoot()
         {
             _nextUId = 0;
@@ -87,7 +102,11 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 _favorites.Add(draggedObject);
             }
             
+            
             _favorites.Sort((a,b) => String.Compare(a.name, b.name, StringComparison.CurrentCulture));
+            
+            SaveFavoritesToEditorPrefs();
+            
             Reload();
         }
 
@@ -105,6 +124,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 _favorites.Remove(_favoritesDictionary[selectedID]);
             }
             
+            SaveFavoritesToEditorPrefs();
+            
             Reload();
         }
         #endregion
@@ -115,6 +136,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             base.SingleClickedItem(id);
 
+            if(id <= 1) return; // Not take into account the root and the favorites "folder".
+            
             Selection.activeObject = _favoritesDictionary[id];
         }
 
@@ -122,6 +145,8 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             base.DoubleClickedItem(id);
 
+            if(id <= 1) return; // Not take into account the root and the favorites "folder".
+            
             AssetDatabase.OpenAsset(_favoritesDictionary[id]);
         }
 
@@ -136,6 +161,50 @@ namespace HaiitoCorp.LittleFavorites.Editor
             _searchQuery = searchQuery;
             
             Reload();
+        }
+
+        #endregion
+
+        #region Save and Load
+
+        private void SaveFavoritesToEditorPrefs()
+        {
+            List<string> guids = new List<string>();
+
+            foreach (Object favorite in _favorites)
+            {
+                string favoritePath = AssetDatabase.GetAssetPath(favorite);
+                guids.Add(AssetDatabase.AssetPathToGUID(favoritePath));
+            }
+            string favoritesGuidsString = JsonConvert.SerializeObject(guids);
+            
+            EditorPrefs.SetString(c_editorPrefsKey, favoritesGuidsString);
+        }
+
+        private void LoadFavoritesFromEditorPrefs()
+        {
+            if(!EditorPrefs.HasKey(c_editorPrefsKey)) return;
+            
+            string favoritesGuidsString = EditorPrefs.GetString(c_editorPrefsKey);
+
+            if(string.IsNullOrEmpty(favoritesGuidsString) || string.IsNullOrWhiteSpace(favoritesGuidsString)) return;
+
+            List<string> guids = JsonConvert.DeserializeObject<List<string>>(favoritesGuidsString);
+            
+            _favorites.Clear();
+
+            foreach (string guid in guids)
+            {
+                string favoritePath = AssetDatabase.GUIDToAssetPath(guid);
+                Object favorite = AssetDatabase.LoadAssetAtPath<Object>(favoritePath);
+                if(favorite == null)
+                {
+                    Debug.LogWarning("[LittleFavorites] Couldn't load object. Couldn't find object at that path.");
+                    continue;
+                }
+                
+                _favorites.Add(favorite);
+            }
         }
 
         #endregion
