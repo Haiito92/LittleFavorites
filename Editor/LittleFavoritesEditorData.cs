@@ -47,7 +47,21 @@ namespace HaiitoCorp.LittleFavorites.Editor
             
             FavoritesChanged?.Invoke();
         }
-        
+
+        internal static void MoveFavoritesAtIndex(Object[] favoriteObjects, int index)
+        {
+            RemoveFavorites(favoriteObjects);
+            
+            foreach (Object favoriteObject in favoriteObjects)
+            {
+                Favorites.Insert(index, favoriteObject);
+                index++;
+            }
+            
+            SaveFavoritesToEditorPrefs();
+            
+            FavoritesChanged?.Invoke();
+        }
         #endregion
         
         #region Save and Load
