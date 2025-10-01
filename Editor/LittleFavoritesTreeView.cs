@@ -186,8 +186,6 @@ namespace HaiitoCorp.LittleFavorites.Editor
                 }
                 else
                 {
-                    Debug.Log("Drag from another window");
-
                     LittleFavoritesEditorData.AddFavorites(DragAndDrop.objectReferences);
                 }                
             }

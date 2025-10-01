@@ -21,26 +21,26 @@ namespace HaiitoCorp.LittleFavorites.Editor
         {
             foreach (Object favoriteObject in favoriteObjects)
             {
-                if(Favorites.Contains(favoriteObject)) return;
-            
-                Favorites.Add(favoriteObject);
+                AddFavorite(favoriteObject);
             }
             
             SaveFavoritesToEditorPrefs();
             
             FavoritesChanged?.Invoke();
+        }
+
+        private static void AddFavorite(Object favoriteObject)
+        {
+            if(Favorites.Contains(favoriteObject)) return;
+            
+            Favorites.Add(favoriteObject);
         }
 
         internal static void RemoveFavorites(Object[] favoriteObjects)
         {
             foreach (Object favoriteObject in favoriteObjects)
             {
-                if (!Favorites.Contains(favoriteObject))
-                {
-                    throw new Exception("Tried to remove a favorite that doesn't exist. This object is not a favorite");
-                }
-            
-                Favorites.Remove(favoriteObject);
+                RemoveFavorite(favoriteObject);
             }
             
             SaveFavoritesToEditorPrefs();
@@ -48,9 +48,30 @@ namespace HaiitoCorp.LittleFavorites.Editor
             FavoritesChanged?.Invoke();
         }
 
+        private static void RemoveFavorite(Object favoriteObject)
+        {
+            if (!Favorites.Contains(favoriteObject))
+            {
+                throw new Exception("Tried to remove a favorite that doesn't exist. This object is not a favorite");
+            }
+            
+            Favorites.Remove(favoriteObject);
+        }
+
         internal static void MoveFavoritesAtIndex(Object[] favoriteObjects, int index)
         {
-            RemoveFavorites(favoriteObjects);
+            int amountToGoBack = 0;
+            foreach (Object favoriteObject in favoriteObjects)
+            {
+                int favoriteObjectIndex = Favorites.IndexOf(favoriteObject);
+                
+                if (favoriteObjectIndex == -1) continue; 
+                if (favoriteObjectIndex < index) amountToGoBack++;
+                
+                RemoveFavorite(favoriteObject);
+            }
+
+            index -= amountToGoBack;
             
             foreach (Object favoriteObject in favoriteObjects)
             {
